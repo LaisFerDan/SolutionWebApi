@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,17 +12,18 @@ using WebApi.Data;
 
 namespace WebApi.Controllers
 {
-    //https://api.chess.com/pub/player/brocaneli/
     [ApiController]
     [Route("player")]
     public class ChessPlayerController : ControllerBase
     {
         private readonly ILogger<ChessPlayerController> _logger;
+        private readonly IConfiguration _configuration;
         private readonly DataContext _dataContext;
 
-        public ChessPlayerController(ILogger<ChessPlayerController> logger, DataContext dataContext)
+        public ChessPlayerController(ILogger<ChessPlayerController> logger, IConfiguration configuration, DataContext dataContext)
         {
             _logger = logger;
+            _configuration = configuration;
             _dataContext = dataContext;
         }
 
@@ -59,32 +61,59 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ChessPlayer>> Get (int id)
         {
-            var player = await _dataContext.ChessPlayers.FindAsync(id);
+            var player = await _dataContext.ChessPlayers.Where(p => p.id == id).FirstOrDefaultAsync();
             if (player == null)
             {
                 return NotFound();
             }
-            return Ok();
+            return Ok(player);
         }
-        
-        [HttpPost]
-        public async Task<ActionResult<ChessPlayer>> CreateChessPlayer([FromBody] ChessPlayer player)
+
+
+        [HttpGet("/wins")]
+        public async Task<ActionResult<IEnumerable<ChessPlayer>>> NumberOfWinsBiggerThanX(int wins)
         {
+            var numberOfWins = await _dataContext.ChessPlayers
+               .Where(x => x.wins > wins).ToListAsync();
+
+            if (numberOfWins == null)
+            {
+                return NotFound();
+            }
+            return Ok(numberOfWins);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ChessPlayer>> CreateChessPlayer([FromHeader] string apiKey, [FromBody] ChessPlayer player)
+        {
+            if (apiKey != _configuration.GetValue<string>("ApiKey"))
+            {
+                return Unauthorized();
+            }
             _dataContext.ChessPlayers.Add(player);
             await _dataContext.SaveChangesAsync();
             return Ok(await _dataContext.ChessPlayers.ToListAsync());
         }
 
         [HttpPut]
-        public async Task<ActionResult<IEnumerable<ChessPlayer>>> UpdateChessPlayer([FromBody] ChessPlayer request)
+        public async Task<ActionResult<IEnumerable<ChessPlayer>>> UpdateChessPlayer([FromHeader] string apiKey, [FromBody] ChessPlayer request)
         {
-            var dbPlayer = await _dataContext.ChessPlayers.FindAsync(request.id);
+            var dbPlayer = await _dataContext.ChessPlayers.Where(p => p.id == request.id).FirstOrDefaultAsync();
             if (dbPlayer == null)
                 return NotFound();
+
+            if (apiKey != _configuration.GetValue<string>("ApiKey"))
+            {
+                return Unauthorized();
+            }
 
             dbPlayer.url = request.url;
             dbPlayer.name = request.name;
             dbPlayer.username = request.username;
+            dbPlayer.best_rating = request.best_rating;
+            dbPlayer.wins = request.wins;
+            dbPlayer.loses = request.loses;
+            dbPlayer.number_of_games = request.number_of_games;
             dbPlayer.followers = request.followers;
             dbPlayer.country = request.country;
             dbPlayer.last_online = request.last_online;
@@ -96,11 +125,16 @@ namespace WebApi.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ChessPlayer>> DeleteChessPlayer([FromRoute] int id)
+        public async Task<ActionResult<ChessPlayer>> DeleteChessPlayer([FromHeader] string apiKey, [FromRoute] int id)
         {
-            var dbPlayer = await _dataContext.ChessPlayers.FindAsync(id);
+            var dbPlayer = await _dataContext.ChessPlayers.Where(p => p.id == id).FirstOrDefaultAsync();
             if (dbPlayer == null)
                 return NotFound();
+
+            if (apiKey != _configuration.GetValue<string>("ApiKey"))
+            {
+                return Unauthorized();
+            }
 
             _dataContext.ChessPlayers.Remove(dbPlayer);
 

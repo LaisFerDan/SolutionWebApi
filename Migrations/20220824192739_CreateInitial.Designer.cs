@@ -12,7 +12,7 @@ using WebApi.Data;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220822202355_CreateInitial")]
+    [Migration("20220824192739_CreateInitial")]
     partial class CreateInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
 
+                    b.Property<int>("best_rating")
+                        .HasColumnType("int");
+
                     b.Property<string>("country")
                         .HasColumnType("nvarchar(max)");
 
@@ -44,14 +47,23 @@ namespace WebApi.Migrations
                     b.Property<DateTime>("last_online")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("loses")
+                        .HasColumnType("int");
+
                     b.Property<string>("name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("number_of_games")
+                        .HasColumnType("int");
 
                     b.Property<string>("url")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("username")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("wins")
+                        .HasColumnType("int");
 
                     b.HasKey("id");
 

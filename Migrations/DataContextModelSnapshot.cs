@@ -23,38 +23,50 @@ namespace WebApi.Migrations
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("ChessPlayer", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
 
-                    b.Property<string>("country")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<int>("best_rating")
+                    .HasColumnType("int");
 
-                    b.Property<int>("followers")
-                        .HasColumnType("int");
+                b.Property<string>("country")
+                    .HasColumnType("varchar(3)");
 
-                    b.Property<DateTime>("joined")
-                        .HasColumnType("datetime2");
+                b.Property<int>("followers")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime>("last_online")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("joined")
+                    .HasColumnType("date");
 
-                    b.Property<string>("name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<DateTime>("last_online")
+                    .HasColumnType("date");
 
-                    b.Property<string>("url")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<int>("loses")
+                   .HasColumnType("int");
 
-                    b.Property<string>("username")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("name")
+                    .HasColumnType("varchar(100)");
 
-                    b.HasKey("id");
+                b.Property<int>("number_of_games")
+                    .HasColumnType("int");
 
-                    b.ToTable("ChessPlayers");
-                });
+                b.Property<string>("url")
+                    .HasColumnType("varchar(70)");
+
+                b.Property<string>("username")
+                    .HasColumnType("varchar(40)");
+
+                b.Property<int>("wins")
+                    .HasColumnType("int");
+
+                b.HasKey("id");
+
+                b.ToTable("ChessPlayers");
+            });
 #pragma warning restore 612, 618
         }
     }
