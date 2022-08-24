@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi.csproj", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjetoFinalTecnicas", "..\ProjetoFinalTecnicas\ProjetoFinalTecnicas.csproj", "{159A2F04-6132-4673-9B36-F89FF4DEB6F4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProjetoFinalTecnicas", "ProjetoFinalTecnicas", "{138F4293-146E-4351-B541-CDA730343450}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{2FFF961C-3531-4761-BF47-4B37E620AB74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +28,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EB1EC5F2-95B3-4FF6-AE08-3267637B9E52} = {2FFF961C-3531-4761-BF47-4B37E620AB74}
+		{159A2F04-6132-4673-9B36-F89FF4DEB6F4} = {138F4293-146E-4351-B541-CDA730343450}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A6CE3706-3EEA-4C8D-B9C5-7428666A6584}
