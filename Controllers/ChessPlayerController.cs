@@ -83,6 +83,18 @@ namespace WebApi.Controllers
             return Ok(numberOfWins);
         }
 
+        [HttpGet("/country")]
+        public async Task<ActionResult<IEnumerable<ChessPlayer>>> NumberOfPlayersByCountry([FromQuery] string countryName)
+        {
+            int count = _dataContext.ChessPlayers.Where(x => x.country == countryName).Count();
+
+            if (count == null)
+            {
+                return NotFound();
+            }
+            return Ok(count);
+        }
+
         [HttpPost]
         public async Task<ActionResult<ChessPlayer>> CreateChessPlayer([FromHeader] string apiKey, [FromBody] ChessPlayer player)
         {
@@ -98,7 +110,7 @@ namespace WebApi.Controllers
         [HttpPut]
         public async Task<ActionResult<IEnumerable<ChessPlayer>>> UpdateChessPlayer([FromHeader] string apiKey, [FromBody] ChessPlayer request)
         {
-            var dbPlayer = await _dataContext.ChessPlayers.Where(p => p.id == request.id).FirstOrDefaultAsync();
+            var dbPlayer = await _dataContext.ChessPlayers.Where(x => x.id == request.id).FirstOrDefaultAsync();
             if (dbPlayer == null)
                 return NotFound();
 
@@ -127,7 +139,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<ChessPlayer>> DeleteChessPlayer([FromHeader] string apiKey, [FromRoute] int id)
         {
-            var dbPlayer = await _dataContext.ChessPlayers.Where(p => p.id == id).FirstOrDefaultAsync();
+            var dbPlayer = await _dataContext.ChessPlayers.Where(x => x.id == id).FirstOrDefaultAsync();
             if (dbPlayer == null)
                 return NotFound();
 
