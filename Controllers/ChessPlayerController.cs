@@ -45,17 +45,7 @@ namespace WebApi.Controllers
                .Take(pageSize)
                .ToListAsync();
 
-            return Ok(new
-            {
-                StatusCode = 200,
-                Message = "Success",
-                Meta = new
-                {
-                    CurrentPage = page,
-                    PageSize = pageSize
-                },
-                Data = result
-            });
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
